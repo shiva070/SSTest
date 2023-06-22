@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    canvas {
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="myCanvas" width="400" height="400"></canvas>
+
+  <script>
+    const canvas = document.getElementById('myCanvas');
+    const ctx = canvas.getContext('2d');
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = 100; // Radius of the ring
+    const sphereCount = 40; // Number of spheres
+    const sphereRadius = 10; // Radius of each sphere
+
+    let animationStarted = false;
+
+    function drawScene() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // Calculate the angle between each sphere
+      const angleStep = (2 * Math.PI) / sphereCount;
+
+      // Draw the spheres
+      for (let i = 0; i < sphereCount; i++) {
+        // Calculate the position of each sphere
+        const angle = i * angleStep;
+        const x = centerX + Math.cos(angle) * radius;
+        const y = centerY + Math.sin(angle) * radius;
+
+        // Draw the sphere
+        ctx.beginPath();
+        ctx.arc(x, y, sphereRadius, 0, 2 * Math.PI);
+        ctx.fillStyle = 'red';
+        ctx.fill();
+      }
+    }
+
+    function animateExplosion() {
+      let moveDistance = 0;
+
+      const animationInterval = setInterval(() => {
+        moveDistance += 5;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (moveDistance >= canvas.width / 2) {
+          clearInterval(animationInterval);
+          animationStarted = false;
+          return;
+        }
+
+        // Calculate the angle between each sphere
+        const angleStep = (2 * Math.PI) / sphereCount;
+
+        // Draw the spheres with updated positions
+        for (let i = 0; i < sphereCount; i++) {
+          // Calculate the position of each sphere
+          const angle = i * angleStep;
+          const x = centerX + Math.cos(angle) * (radius + moveDistance);
+          const y = centerY + Math.sin(angle) * (radius + moveDistance);
+
+          // Draw the sphere
+          ctx.beginPath();
+          ctx.arc(x, y, sphereRadius, 0, 2 * Math.PI);
+          ctx.fillStyle = 'red';
+          ctx.fill();
+        }
+      }, 30);
+    }
+
+    function playAnimation() {
+      if (animationStarted) return;
+
+      animationStarted = true;
+      animateExplosion();
+    }
+
+    setTimeout(() => {
+        playAnimation();
+    }, 800);
+    drawScene();
+  </script>
+</body>
+</html>

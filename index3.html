@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Spheres Animation</title>
+    <style>
+      #canvas {
+        background-color: black;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="canvas"></canvas>
+    <button id="moveButton">Move Spheres</button>
+
+    <script>
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+      const spheres = [];
+
+      // Set the canvas size
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      // Function to generate a random number within a range
+      function getRandomNumber(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      // Function to create a sphere object
+      function createSphere() {
+        const centerX = canvas.width / 2;
+        const centerY = canvas.height / 2;
+        const radius = getRandomNumber(10, 50);
+        const color = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${
+          Math.random() * 255
+        })`;
+        const startX = getRandomNumber(radius, canvas.width - radius);
+        const startY = getRandomNumber(radius, canvas.height - radius);
+
+        return {
+          x: startX,
+          y: startY,
+          radius,
+          color,
+          targetX: centerX,
+          targetY: centerY,
+          angle: Math.atan2(centerY - startY, centerX - startX),
+        };
+      }
+
+      // Create 10 spheres
+      for (let i = 0; i < 10; i++) {
+        spheres.push(createSphere());
+      }
+
+      // Function to animate the spheres towards the center
+      function animateSpheresToCenter() {
+        spheres.forEach((sphere) => {
+          const speed = 2;
+          const dx = sphere.targetX - sphere.x;
+          const dy = sphere.targetY - sphere.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+
+          if (distance > 20) {
+            const offsetX = (dx / distance) * speed;
+            const offsetY = (dy / distance) * speed;
+            sphere.x += offsetX;
+            sphere.y += offsetY;
+          }
+        });
+
+        drawSpheres();
+
+        // Request the next animation frame
+        if (spheres.some((sphere) => {
+          const dx = sphere.targetX - sphere.x;
+          const dy = sphere.targetY - sphere.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          return distance > 20;
+        })) {
+          requestAnimationFrame(animateSpheresToCenter);
+        }
+      }
+
+      // Function to animate the spheres back using the same angle
+      function animateSpheresBack() {
+        spheres.forEach((sphere) => {
+        let angle= Math.atan2(canvas.height / 2 - sphere.y, canvas.width / 2 - sphere.x);
+
+          const speed = 2;
+          const offsetX = Math.cos(angle) * speed;
+          const offsetY = Math.sin(angle) * speed;
+          sphere.x -= offsetX;
+          sphere.y -= offsetY;
+        });
+
+        drawSpheres();
+
+        // Request the next animation frame
+        if (spheres.some((sphere) => {
+          const dx = sphere.targetX - sphere.x;
+          const dy = sphere.targetY - sphere.y;
+          const distance = Math.sqrt(dx * dx + dy * dy);
+          return distance <500;
+        })) {
+          requestAnimationFrame(animateSpheresBack);
+        }
+      }
+
+      // Function to draw the spheres on the canvas
+      function drawSpheres() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        spheres.forEach((sphere) => {
+          ctx.beginPath();
+          ctx.arc(sphere.x, sphere.y, sphere.radius, 0, 2 * Math.PI);
+          ctx.fillStyle = sphere.color;
+          ctx.fill();
+        });
+      }
+
+      // Add event listener to the move button
+      const moveButton = document.getElementById("moveButton");
+      moveButton.addEventListener("click", () => {
+        animateSpheresToCenter();
+        setTimeout(() => {
+          animateSpheresBack();
+        }, 3000);
+      });
+
+      // Initial drawing of spheres
+      drawSpheres();
+    </script>
+  </body>
+</html>

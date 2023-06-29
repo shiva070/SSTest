@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Canvas Text and Gradient Sphere</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    canvas {
+      display: block;
+      background-color: black;
+      /* image-rendering: pixelated;  */
+    }
+  </style>
+</head>
+<body>
+  <canvas id="myCanvas"></canvas>
+
+  <script>
+    // Get the canvas element
+    const canvas = document.getElementById('myCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Disable antialiasing
+    ctx.imageSmoothingEnabled = false;
+    ctx.webkitImageSmoothingEnabled = false;
+    ctx.mozImageSmoothingEnabled = false;
+    ctx.msImageSmoothingEnabled = false;
+    ctx.oImageSmoothingEnabled = false;
+
+    // Function to set the canvas size to full screen
+    function setCanvasSize() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    // Call the function to set the initial canvas size
+    setCanvasSize();
+
+    // Redraw the canvas when the window is resized
+    window.addEventListener('resize', function () {
+      setCanvasSize();
+      redrawCanvas();
+    });
+
+    // Function to redraw the canvas
+    function redrawCanvas() {
+      // Clear the canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw the text
+      ctx.font = '84px serif';
+      ctx.fillStyle = 'white';
+      ctx.fillText('Hello, Canvas! this is the sample texg', 150, 150);
+
+      // Draw the linear gradient arcs
+      ctx.lineWidth = 5;
+
+      // Arc 1 - Top Left
+      const gradient1 = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+      gradient1.addColorStop(0, 'red');
+      gradient1.addColorStop(1, 'blue');
+
+      ctx.strokeStyle = gradient1;
+      ctx.beginPath();
+      ctx.arc(100, 100, 50, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.stroke();
+
+      // Arc 2 - Top Right
+      const gradient2 = ctx.createLinearGradient(canvas.width, 0, 0, canvas.height);
+      gradient2.addColorStop(0, 'green');
+      gradient2.addColorStop(1, 'yellow');
+
+      ctx.strokeStyle = gradient2;
+      ctx.beginPath();
+      ctx.arc(canvas.width - 100, 100, 50, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.stroke();
+
+      // Arc 3 - Bottom Left
+      const gradient3 = ctx.createLinearGradient(0, canvas.height, canvas.width, 0);
+      gradient3.addColorStop(0, 'cyan');
+      gradient3.addColorStop(1, 'magenta');
+
+      ctx.strokeStyle = gradient3;
+      ctx.beginPath();
+      ctx.arc(100, canvas.height - 100, 50, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.stroke();
+
+      // Arc 4 - Bottom Right
+      const gradient4 = ctx.createLinearGradient(canvas.width, canvas.height, 0, 0);
+      gradient4.addColorStop(0, 'orange');
+      gradient4.addColorStop(1, 'purple');
+
+      ctx.strokeStyle = gradient4;
+      ctx.beginPath();
+      ctx.arc(canvas.width - 100, canvas.height - 100, 50, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.stroke();
+
+      // Draw the gradient sphere
+      const sphereGradient = ctx.createRadialGradient(
+        canvas.width / 2, canvas.height / 2, 0,
+        canvas.width / 2, canvas.height / 2, 150
+      );
+      sphereGradient.addColorStop(0, 'white');
+      sphereGradient.addColorStop(1, 'gray');
+
+      ctx.fillStyle = sphereGradient;
+      ctx.beginPath();
+      ctx.arc(canvas.width / 2, canvas.height / 2, 150, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    // Initial draw of the canvas
+    redrawCanvas();
+  </script>
+</body>
+</html>

@@ -130,6 +130,31 @@
 
       // Initial drawing of spheres
       drawSpheres();
+
+      function calculateGlobalPosition(canvas, x, y) {
+  const canvasRect = canvas.getBoundingClientRect();
+  const offsetX = canvasRect.left;
+  const offsetY = canvasRect.top;
+
+  const globalX = offsetX + x;
+  const globalY = offsetY + y;
+
+  return { x: globalX, y: globalY };
+}
+function calculatepos()
+{
+  const canvas = document.getElementById('canvas');
+      const x = 100; // Example x-coordinate of the arc within the canvas
+      const y = 50;  // Example y-coordinate of the arc within the canvas
+
+      const globalPosition = calculateGlobalPosition(canvas, x, y);
+
+  console.log('Global Position:', globalPosition);
+
+}
+  setTimeout(() => {
+    calculatepos();
+  }, 500);
     </script>
   </body>
 </html>

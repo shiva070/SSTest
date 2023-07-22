@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>60 FPS Animation on Canvas</title>
+  <style>
+    canvas {
+      border: 1px solid black;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="canvas" width="800" height="600"></canvas>
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+
+    let lastTime = 0;
+    const fps = 1;
+
+    let testtime=0;
+    // Animation loop
+    function animate(currentTime) {
+      // Calculate time difference since the last frame
+      const deltaTime = currentTime - lastTime;
+     
+     
+      // Check if enough time has passed to render a new frame at 60 fps
+      if (deltaTime >= 1000 / fps) {
+        testtime +=deltaTime;
+        console.log(testtime);
+        // Clear the canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Update and draw your animation here
+        // Example: Draw a rectangle moving from left to right
+        const speed = 100; // pixels per second
+        const rectWidth = 50;
+        const rectHeight = 50;
+        const x = (currentTime / 1000) * speed % (canvas.width - rectWidth);
+
+        ctx.fillStyle = 'red';
+        ctx.fillRect(x, (canvas.height - rectHeight) / 2, rectWidth, rectHeight);
+
+        // Store the current time for the next frame calculation
+        lastTime = currentTime;
+      }
+
+      // Request the next animation frame
+      requestAnimationFrame(animate);
+    }
+
+    // Start the animation loop
+    requestAnimationFrame(animate);
+  </script>
+</body>
+</html>

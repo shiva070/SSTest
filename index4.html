@@ -2,8 +2,21 @@
 <html>
 <head>
   <title>Portrait Mode Only</title>
+  <style>
+
+    @-o-viewport{
+      orientation: portrait;
+    }
+
+    @-ms-viewport{
+      orientation: portrait;
+    }
+
+
+  </style>
 </head>
 <body>
+  <div id="screen">
   <h1>
     In publishing and graphic design,
      Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. 
@@ -14,7 +27,7 @@
     Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. 
     Lorem ipsum may be used as a placeholder before final copy is available.  
   </p>
-
+</div>
   <script>
     function checkOrientation() {
       if (window.orientation === 90 || window.orientation === -90) {
@@ -28,14 +41,26 @@
         // Request to lock the screen in portrait mode
         screen.orientation.lock('portrait').then(function() {
           // Orientation lock succeeded
-          console.log('Orientation locked in portrait mode.');
+          alert('Orientation locked in portrait mode. A');
         }).catch(function(error) {
           // Orientation lock failed
-          console.error('Orientation lock failed:', error);
+          alert('Orientation lock failed:', error);
         });
       } else {
-        console.warn('Screen orientation API not supported.');
+        alert('Screen orientation API not supported.');
       }
+      try
+      {
+        screen.lockOrientation('portrait').then(function(){
+          alert('Orientation locked in portrait mode. B');
+        }).catch(function(error) {
+          // Orientation lock failed
+          alert('Orientation lock failed: C', error);
+        });
+      }catch{
+        alert("not working");
+      }
+      
     }
 
     // Check orientation when the page loads

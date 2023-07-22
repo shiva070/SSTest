@@ -34,9 +34,11 @@
 </div>
   <script>
     function checkOrientation() {
-      if (window.orientation === 90 || window.orientation === -90) {
-        alert('Please use portrait mode for the best experience.');
-      }
+      if (document.fullscreenElement) return;
+  return document.documentElement.requestFullscreen();
+      // if (window.orientation === 90 || window.orientation === -90) {
+      //   alert('Please use portrait mode for the best experience. new');
+      // }
     }
 
     function lockOrientation() {

@@ -4,19 +4,23 @@
   <title>Portrait Mode Only</title>
   <style>
 
-    @-o-viewport{
-      orientation: portrait;
+@media screen and (orientation: landscape) {
+      .screen {
+        transform: rotate(-90deg);
+        transform-origin: left top;
+        width: 100vh;
+        height: 100vw;
+        overflow-x: hidden;
+        position: absolute;
+        top: 100%;
+        left: 0;
+      }
     }
-
-    @-ms-viewport{
-      orientation: portrait;
-    }
-
 
   </style>
 </head>
 <body>
-  <div id="screen">
+  <div class="" id="screen">
   <h1>
     In publishing and graphic design,
      Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. 
@@ -37,37 +41,26 @@
 
     function lockOrientation() {
       // Check if the device supports screen orientation API
-      if (screen.orientation && screen.orientation.lock) {
-        // Request to lock the screen in portrait mode
-        screen.orientation.lock('portrait').then(function() {
-          // Orientation lock succeeded
-          alert('Orientation locked in portrait mode. A');
-        }).catch(function(error) {
-          // Orientation lock failed
-          alert('Orientation lock failed:', error);
-        });
-      } else {
-        alert('Screen orientation API not supported.');
-      }
-      try
-      {
-        screen.lockOrientation('portrait').then(function(){
-          alert('Orientation locked in portrait mode. B');
-        }).catch(function(error) {
-          // Orientation lock failed
-          alert('Orientation lock failed: C', error);
-        });
-      }catch{
-        alert("not working");
-      }
-      
+      if(window.innerWidth<window.innerHeight)
+       {
+        var element = document.getElementById("screen");
+        element.classList.add("screen");
+       }else
+       {
+        var element = document.getElementById("screen");
+        element.classList.remove("screen");
+       }
     }
 
     // Check orientation when the page loads
     checkOrientation();
 
     // Lock the orientation when the page loads
-    lockOrientation();
+   
+    setInterval(() => {
+      lockOrientation();
+
+    }, 10);
 
     // Listen for orientation change events
     window.addEventListener('orientationchange', function() {

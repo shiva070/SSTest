@@ -1,125 +1,54 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Canvas Text and Gradient Sphere</title>
-  <style>
-    html, body {
-      margin: 0;
-      padding: 0;
-      overflow: hidden;
-    }
-
-    canvas {
-      display: block;
-      background-color: black;
-      /* image-rendering: pixelated;  */
-    }
-  </style>
+  <title>Portrait Mode Only</title>
 </head>
 <body>
-  <canvas id="myCanvas"></canvas>
+  <h1>
+    In publishing and graphic design,
+     Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. 
+     Lorem ipsum may be used as a placeholder before final copy is available.  
+  </h1>
+  <p>
+    In publishing and graphic design,
+    Lorem ipsum is a placeholder text commonly used to demonstrate the visual form of a document or a typeface without relying on meaningful content. 
+    Lorem ipsum may be used as a placeholder before final copy is available.  
+  </p>
 
   <script>
-    // Get the canvas element
-    const canvas = document.getElementById('myCanvas');
-    const ctx = canvas.getContext('2d');
-
-    // Disable antialiasing
-    ctx.imageSmoothingEnabled = false;
-    ctx.webkitImageSmoothingEnabled = false;
-    ctx.mozImageSmoothingEnabled = false;
-    ctx.msImageSmoothingEnabled = false;
-    ctx.oImageSmoothingEnabled = false;
-
-    // Function to set the canvas size to full screen
-    function setCanvasSize() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+    function checkOrientation() {
+      if (window.orientation === 90 || window.orientation === -90) {
+        alert('Please use portrait mode for the best experience.');
+      }
     }
 
-    // Call the function to set the initial canvas size
-    setCanvasSize();
+    function lockOrientation() {
+      // Check if the device supports screen orientation API
+      if (screen.orientation && screen.orientation.lock) {
+        // Request to lock the screen in portrait mode
+        screen.orientation.lock('portrait').then(function() {
+          // Orientation lock succeeded
+          console.log('Orientation locked in portrait mode.');
+        }).catch(function(error) {
+          // Orientation lock failed
+          console.error('Orientation lock failed:', error);
+        });
+      } else {
+        console.warn('Screen orientation API not supported.');
+      }
+    }
 
-    // Redraw the canvas when the window is resized
-    window.addEventListener('resize', function () {
-      setCanvasSize();
-      redrawCanvas();
+    // Check orientation when the page loads
+    checkOrientation();
+
+    // Lock the orientation when the page loads
+    lockOrientation();
+
+    // Listen for orientation change events
+    window.addEventListener('orientationchange', function() {
+      checkOrientation();
+      lockOrientation(); // Lock again to ensure portrait mode
     });
-
-    // Function to redraw the canvas
-    function redrawCanvas() {
-      // Clear the canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Draw the text
-      ctx.font = '84px serif';
-      ctx.fillStyle = 'white';
-      ctx.fillText('Hello, Canvas! this is the sample texg', 150, 150);
-
-      // Draw the linear gradient arcs
-      ctx.lineWidth = 5;
-
-      // Arc 1 - Top Left
-      const gradient1 = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-      gradient1.addColorStop(0, 'red');
-      gradient1.addColorStop(1, 'blue');
-
-      ctx.strokeStyle = gradient1;
-      ctx.beginPath();
-      ctx.arc(100, 100, 50, 0, Math.PI * 2);
-      ctx.closePath();
-      ctx.stroke();
-
-      // Arc 2 - Top Right
-      const gradient2 = ctx.createLinearGradient(canvas.width, 0, 0, canvas.height);
-      gradient2.addColorStop(0, 'green');
-      gradient2.addColorStop(1, 'yellow');
-
-      ctx.strokeStyle = gradient2;
-      ctx.beginPath();
-      ctx.arc(canvas.width - 100, 100, 50, 0, Math.PI * 2);
-      ctx.closePath();
-      ctx.stroke();
-
-      // Arc 3 - Bottom Left
-      const gradient3 = ctx.createLinearGradient(0, canvas.height, canvas.width, 0);
-      gradient3.addColorStop(0, 'cyan');
-      gradient3.addColorStop(1, 'magenta');
-
-      ctx.strokeStyle = gradient3;
-      ctx.beginPath();
-      ctx.arc(100, canvas.height - 100, 50, 0, Math.PI * 2);
-      ctx.closePath();
-      ctx.stroke();
-
-      // Arc 4 - Bottom Right
-      const gradient4 = ctx.createLinearGradient(canvas.width, canvas.height, 0, 0);
-      gradient4.addColorStop(0, 'orange');
-      gradient4.addColorStop(1, 'purple');
-
-      ctx.strokeStyle = gradient4;
-      ctx.beginPath();
-      ctx.arc(canvas.width - 100, canvas.height - 100, 50, 0, Math.PI * 2);
-      ctx.closePath();
-      ctx.stroke();
-
-      // Draw the gradient sphere
-      const sphereGradient = ctx.createRadialGradient(
-        canvas.width / 2, canvas.height / 2, 0,
-        canvas.width / 2, canvas.height / 2, 150
-      );
-      sphereGradient.addColorStop(0, 'white');
-      sphereGradient.addColorStop(1, 'gray');
-
-      ctx.fillStyle = sphereGradient;
-      ctx.beginPath();
-      ctx.arc(canvas.width / 2, canvas.height / 2, 150, 0, Math.PI * 2);
-      ctx.closePath();
-      ctx.fill();
-    }
-
-    // Initial draw of the canvas
-    redrawCanvas();
   </script>
 </body>
 </html>

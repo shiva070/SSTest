@@ -1,89 +1,94 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <title>Text and Floating Sphere with PixiJS</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/5.3.3/pixi.min.js"></script>
   <style>
-    canvas {
-      border: 1px solid black;
+    body {
+      margin: 0;
+      overflow: hidden;
+    }
+
+    #canvas-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+    }
+
+    #pixi-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
     }
   </style>
 </head>
 <body>
-  <canvas id="myCanvas" width="400" height="400"></canvas>
+  <div id="canvas-container">
+    <canvas id="html-canvas"></canvas>
+    <div id="pixi-canvas"></div>
+  </div>
 
   <script>
-    const canvas = document.getElementById('myCanvas');
-    const ctx = canvas.getContext('2d');
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
-    const radius = 100; // Radius of the ring
-    const sphereCount = 40; // Number of spheres
-    const sphereRadius = 10; // Radius of each sphere
+    // Create the PixiJS application and stage
+    const app = new PIXI.Application({
+      width: window.innerWidth,
+      height: window.innerHeight,
+      transparent: true,
+      view: document.getElementById('pixi-canvas')
+    });
 
-    let animationStarted = false;
+    const stage = new PIXI.Container();
 
-    function drawScene() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      // Calculate the angle between each sphere
-      const angleStep = (2 * Math.PI) / sphereCount;
+    // Create the PixiJS Text object
+    const text = new PIXI.Text('Hello, PixiJS!', {
+      fontFamily: 'Arial',
+      fontSize: 24,
+      fill: 'white'
+    });
 
-      // Draw the spheres
-      for (let i = 0; i < sphereCount; i++) {
-        // Calculate the position of each sphere
-        const angle = i * angleStep;
-        const x = centerX + Math.cos(angle) * radius;
-        const y = centerY + Math.sin(angle) * radius;
+    // Set the position of the text
+    text.x = 50;
+    text.y = 50;
 
-        // Draw the sphere
-        ctx.beginPath();
-        ctx.arc(x, y, sphereRadius, 0, 2 * Math.PI);
-        ctx.fillStyle = 'red';
-        ctx.fill();
-      }
+    // Add the text to the stage
+    stage.addChild(text);
+
+    // Load the texture for the sphere
+    PIXI.Loader.shared.add('sphere', 'sphere.png').load(setup);
+
+    // Function to set up the floating sphere
+    function setup() {
+      // Create the PixiJS Sprite object
+      const sphereTexture = PIXI.Loader.shared.resources.sphere.texture;
+      const sphere = new PIXI.Sprite(sphereTexture);
+
+      // Set the initial position and scale of the sphere
+      sphere.x = window.innerWidth / 2;
+      sphere.y = window.innerHeight / 2;
+      sphere.scale.set(0.5);
+
+      // Add the sphere to the stage
+      stage.addChild(sphere);
+
+      // Animation loop for the floating sphere
+      app.ticker.add((delta) => {
+        // Update the sphere's position
+        sphere.x += Math.sin(Date.now() * 0.002) * 2;
+        sphere.y += Math.cos(Date.now() * 0.002) * 2;
+      });
     }
 
-    function animateExplosion() {
-      let moveDistance = 0;
+    // Resize the PixiJS renderer when the window is resized
+    window.addEventListener('resize', () => {
+      app.renderer.resize(window.innerWidth, window.innerHeight);
+    });
 
-      const animationInterval = setInterval(() => {
-        moveDistance += 5;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        if (moveDistance >= canvas.width / 2) {
-          clearInterval(animationInterval);
-          animationStarted = false;
-          return;
-        }
-
-        // Calculate the angle between each sphere
-        const angleStep = (2 * Math.PI) / sphereCount;
-
-        // Draw the spheres with updated positions
-        for (let i = 0; i < sphereCount; i++) {
-          // Calculate the position of each sphere
-          const angle = i * angleStep;
-          const x = centerX + Math.cos(angle) * (radius + moveDistance);
-          const y = centerY + Math.sin(angle) * (radius + moveDistance);
-
-          // Draw the sphere
-          ctx.beginPath();
-          ctx.arc(x, y, sphereRadius, 0, 2 * Math.PI);
-          ctx.fillStyle = 'red';
-          ctx.fill();
-        }
-      }, 30);
+    // Update the PixiJS renderer on the next animation frame
+    function animate() {
+      app.renderer.render(stage);
+      requestAnimationFrame(animate);
     }
-
-    function playAnimation() {
-      if (animationStarted) return;
-
-      animationStarted = true;
-      animateExplosion();
-    }
-
-    setTimeout(() => {
-        playAnimation();
-    }, 800);
-    drawScene();
+    requestAnimationFrame(animate);
   </script>
 </body>
 </html>

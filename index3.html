@@ -3,158 +3,45 @@
   <head>
     <title>Spheres Animation</title>
     <style>
-      #canvas {
-        background-color: black;
+      #myCanvas {
+        background-color: red;
       }
     </style>
   </head>
   <body>
-    <canvas id="canvas"></canvas>
-    <button id="moveButton">Move Spheres</button>
+    <canvas id="myCanvas"></canvas>
+
 
     <script>
-      const canvas = document.getElementById("canvas");
-      const ctx = canvas.getContext("2d");
-      const spheres = [];
+const canvas = document.getElementById('myCanvas');
+const ctx = canvas.getContext('2d');
 
-      // Set the canvas size
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+const text = "Lorem ipsum dolor sit amet,\nconsectetur adipiscing elit,\nsed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+const x = canvas.width - 10; // Right align
+const y = 10; // Top position
+const lineHeight = 20; // Adjust this value to change the line spacing
 
-      // Function to generate a random number within a range
-      function getRandomNumber(min, max) {
-        return Math.random() * (max - min) + min;
-      }
+ctx.font = '14px Arial';
+ctx.fillStyle = 'black';
+ctx.textBaseline = 'top';
 
-      // Function to create a sphere object
-      function createSphere() {
-        const centerX = canvas.width / 2;
-        const centerY = canvas.height / 2;
-        const radius = getRandomNumber(10, 50);
-        const color = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${
-          Math.random() * 255
-        })`;
-        const startX = getRandomNumber(radius, canvas.width - radius);
-        const startY = getRandomNumber(radius, canvas.height - radius);
+// Split the text into multiple lines
+const lines = text.split('\n');
 
-        return {
-          x: startX,
-          y: startY,
-          radius,
-          color,
-          targetX: centerX,
-          targetY: centerY,
-          angle: Math.atan2(centerY - startY, centerX - startX),
-        };
-      }
+// Find the maximum line width
+let maxLineWidth = 0;
+lines.forEach(line => {
+  const lineWidth = ctx.measureText(line).width;
+  maxLineWidth = Math.max(maxLineWidth, lineWidth);
+});
 
-      // Create 10 spheres
-      for (let i = 0; i < 10; i++) {
-        spheres.push(createSphere());
-      }
+// Loop through each line and draw it on the canvas
+lines.forEach((line, index) => {
+  const xPos = x - maxLineWidth; // Adjust x position based on maximum line width
+  const yPos = y + (index * lineHeight);
+  ctx.fillText(line, xPos, yPos);
+});
 
-      // Function to animate the spheres towards the center
-      function animateSpheresToCenter() {
-        spheres.forEach((sphere) => {
-          const speed = 2;
-          const dx = sphere.targetX - sphere.x;
-          const dy = sphere.targetY - sphere.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-
-          if (distance > 20) {
-            const offsetX = (dx / distance) * speed;
-            const offsetY = (dy / distance) * speed;
-            sphere.x += offsetX;
-            sphere.y += offsetY;
-          }
-        });
-
-        drawSpheres();
-
-        // Request the next animation frame
-        if (spheres.some((sphere) => {
-          const dx = sphere.targetX - sphere.x;
-          const dy = sphere.targetY - sphere.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          return distance > 20;
-        })) {
-          requestAnimationFrame(animateSpheresToCenter);
-        }
-      }
-
-      // Function to animate the spheres back using the same angle
-      function animateSpheresBack() {
-        spheres.forEach((sphere) => {
-        let angle= Math.atan2(canvas.height / 2 - sphere.y, canvas.width / 2 - sphere.x);
-
-          const speed = 2;
-          const offsetX = Math.cos(angle) * speed;
-          const offsetY = Math.sin(angle) * speed;
-          sphere.x -= offsetX;
-          sphere.y -= offsetY;
-        });
-
-        drawSpheres();
-
-        // Request the next animation frame
-        if (spheres.some((sphere) => {
-          const dx = sphere.targetX - sphere.x;
-          const dy = sphere.targetY - sphere.y;
-          const distance = Math.sqrt(dx * dx + dy * dy);
-          return distance <500;
-        })) {
-          requestAnimationFrame(animateSpheresBack);
-        }
-      }
-
-      // Function to draw the spheres on the canvas
-      function drawSpheres() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        spheres.forEach((sphere) => {
-          ctx.beginPath();
-          ctx.arc(sphere.x, sphere.y, sphere.radius, 0, 2 * Math.PI);
-          ctx.fillStyle = sphere.color;
-          ctx.fill();
-        });
-      }
-
-      // Add event listener to the move button
-      const moveButton = document.getElementById("moveButton");
-      moveButton.addEventListener("click", () => {
-        animateSpheresToCenter();
-        setTimeout(() => {
-          animateSpheresBack();
-        }, 3000);
-      });
-
-      // Initial drawing of spheres
-      drawSpheres();
-
-      function calculateGlobalPosition(canvas, x, y) {
-  const canvasRect = canvas.getBoundingClientRect();
-  const offsetX = canvasRect.left;
-  const offsetY = canvasRect.top;
-
-  const globalX = offsetX + x;
-  const globalY = offsetY + y;
-
-  return { x: globalX, y: globalY };
-}
-function calculatepos()
-{
-  const canvas = document.getElementById('canvas');
-      const x = 100; // Example x-coordinate of the arc within the canvas
-      const y = 50;  // Example y-coordinate of the arc within the canvas
-
-      const globalPosition = calculateGlobalPosition(canvas, x, y);
-
-  console.log('Global Position:', globalPosition);
-
-}
-  setTimeout(() => {
-    calculatepos();
-  }, 500);
     </script>
   </body>
 </html>

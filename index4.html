@@ -41,7 +41,7 @@
 
     function lockOrientation() {
       // Check if the device supports screen orientation API
-      if(window.innerWidth<window.innerHeight)
+      if(window.innerWidth>window.innerHeight)
        {
         var element = document.getElementById("screen");
         element.classList.add("screen");

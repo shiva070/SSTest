@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prevent Pinch Zoom</title>
+    <style>
+        body {
+            -ms-touch-action: manipulation;
+            touch-action: manipulation;
+        }
+    </style>
+</head>
+<body>
+    <p>Scroll the page using touch, but pinch-to-zoom is disabled.</p>
+    <script>
+        // Prevent pinch-zoom
+        document.addEventListener('gesturestart', function (event) {
+            event.preventDefault();
+        });
+        document.addEventListener('gesturechange', function (event) {
+            event.preventDefault();
+        });
+        document.addEventListener('gestureend', function (event) {
+            event.preventDefault();
+        });
+
+        // Alternative method for broader compatibility
+        document.addEventListener('touchmove', function (event) {
+            if (event.touches.length > 1) {
+                event.preventDefault();
+            }
+        }, { passive: false });
+    </script>
+</body>
+</html>
